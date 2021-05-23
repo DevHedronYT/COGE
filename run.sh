@@ -17,6 +17,7 @@ else
     cd GLFW && mkdir build && cd build
     cmake .. && make
     cd src
+    l
     mv libglfw3.a ../../../
     cd ../../..
     rm -rf GLFW
