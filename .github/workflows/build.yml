@@ -1,6 +1,4 @@
-name: C/C++ CI
-
-# runs-on: macos-latest
+name: Build CI
 
 on:
   push:
@@ -10,11 +8,23 @@ on:
 
 jobs:
   build:
-      runs-on: windows-latest
+      runs-on: ubuntu-20.04
       steps:
           - uses: actions/checkout@v2
           
           - name: Compile
-            run: run-windows.bat
+            run: sh run-linux.sh
+
+      runs-on: macos-latest
+      steps:
+          - uses: actions/checkout@v2
+          - name: Compile
+            run: sh run-mac.sh
+
+      runs-on: windows-latest
+      steps:
+          - uses: actions/checkout@v2
+          - name: Compile
+            run: .\run-windows.bat
 
 
