@@ -1,5 +1,5 @@
 sourceDir = src
-testSrcDir = ./test
+testSrcDir = ./examples
 externDir = ./third_party
 outDir = _build
 

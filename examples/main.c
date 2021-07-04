@@ -6,6 +6,6 @@
 
 int main(void) {
     Run();
-    coge_log_info("yohh", NULL);
+    coge_log_info("testing, coge logger", NULL);
     return 0;
 }
