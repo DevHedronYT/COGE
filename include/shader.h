@@ -1,15 +1,15 @@
-#ifndef _COGE_SHADER 
-    #define _COGE_SHADER
+#ifndef _COGE_SHADER
+#define _COGE_SHADER
 
-    #include <stdlib.h>
-    #include <string.h>
-    #include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-    #include <gl.h>
-    #include "log.h"
+#include "log.h"
+#include <gl.h>
 
-    /* Credits to: https://github.com/templalizer1284/cshader */
+/* Credits to: https://github.com/templalizer1284/cshader */
 
-    unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName);
+unsigned int coge_load_shader(const char *vsFileName, const char *fsFileName);
 
 #endif

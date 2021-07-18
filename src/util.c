@@ -1,7 +1,10 @@
 #include <util.h>
-    // Implementation
+// Implementation
 
-coge_program_props_t coge_gen_program_props_t(float * vertices, unsigned int * indices, unsigned int verticesSize, unsigned int indicesSize, unsigned int vboUsage, unsigned int iboUsage) {
+coge_program_props_t
+coge_gen_program_props_t(float *vertices, unsigned int *indices,
+                         unsigned int verticesSize, unsigned int indicesSize,
+                         unsigned int vboUsage, unsigned int iboUsage) {
     coge_program_props_t props;
 
     coge_gen_vao_t(&props.vao);
@@ -24,35 +27,34 @@ coge_program_props_t coge_gen_program_props_t(float * vertices, unsigned int * i
     return props;
 }
 
-
-GLFWwindow * coge_window_init(int width, int height, const char * name) {
+GLFWwindow *coge_window_init(int width, int height, const char *name) {
 
     if (!glfwInit()) {
-	coge_log_error("Error Initializing GLFW", NULL);
+        coge_log_error("Error Initializing GLFW", NULL);
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    # ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GL_TRUE);
-    # endif
-	
-    GLFWwindow * window = glfwCreateWindow(width, height, name, NULL, NULL);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GL_TRUE);
+#endif
+
+    GLFWwindow *window = glfwCreateWindow(width, height, name, NULL, NULL);
     if (!window) {
-	coge_log_error("Error Making Window", NULL);
-	glfwTerminate();
+        coge_log_error("Error Making Window", NULL);
+        glfwTerminate();
     }
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-	coge_log_error("Error Initializing GLAD", NULL);
-	glfwTerminate();
+        coge_log_error("Error Initializing GLAD", NULL);
+        glfwTerminate();
     }
-    
+
     coge_log_info("OpenGL Version: %s", glGetString(GL_VERSION));
 
     glEnable(GL_BLEND);
@@ -69,5 +71,3 @@ void coge_clear_screen(float v0, float v1, float v2, float v3) {
 void coge_draw_vertices(unsigned int vertexNum) {
     glDrawElements(GL_TRIANGLES, vertexNum, GL_UNSIGNED_INT, 0);
 }
-
-
