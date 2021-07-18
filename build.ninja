@@ -1,6 +1,6 @@
 include ./config.txt
-include ./Tools/Configurations/${toolchain}.ninja
-include ./Tools/Configurations/${toolchain}_${mode}.ninja
+include ./tools/Configurations/${toolchain}.ninja
+include ./tools/Configurations/${toolchain}_${mode}.ninja
 
 rule cc
     depfile = ${out}.dep
@@ -18,7 +18,7 @@ rule ar
 # Building
 ## Dependencies
 ### Platform dependent
-include ./Tools/Platform/${platform}.ninja
+include ./tools/Platform/${platform}.ninja
 
 ### Generic
 build ${obj}/glad.obj: cc ${externDir}/GLAD/gl.c
@@ -38,7 +38,7 @@ build ${obj}/vb.obj: cc ${sourceDir}/vbo.c
 build ${outDir}/framework.a: ar ${obj}/ib.obj ${obj}/joy.obj ${obj}/keyb.obj ${obj}/mous.obj ${obj}/rend.obj ${obj}/shad.obj ${obj}/textur.obj ${obj}/va.obj ${obj}/vb.obj
 
 ## App
-build ${obj}/main.obj: cc ${testSrcDir}/Main.c
+build ${obj}/main.obj: cc ${testSrcDir}/main.c
 
 build ${outDir}/app.a: ar ${obj}/main.obj
 build ${outDir}/app${extension}: link ${outDir}/app.a ${outDir}/framework.a ${outDir}/${platform}.a ${outDir}/external.a
