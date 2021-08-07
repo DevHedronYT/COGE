@@ -42,40 +42,40 @@
     #define coge_set_output_bg_color(x) printf(x)
 
     #define coge_log_info(msg, ...) \
-	printf("%s", GREEN); \
-	printf("INFO: "); \
-	printf(msg, __VA_ARGS__); \
-	printf("%s", DEFAULT); \
-	printf("\n"); 
+        printf("%s", GREEN); \
+        printf("INFO: "); \
+        printf(msg, __VA_ARGS__); \
+        printf("%s", DEFAULT); \
+        printf("\n"); 
 
     #define coge_log_error(msg, ...) \
-	printf("%s", RED); \
-	printf("ERROR: "); \
-	printf(msg, __VA_ARGS__); \
-	printf("%s", DEFAULT); \
-	printf("\n"); 
+        printf("%s", RED); \
+        printf("ERROR: "); \
+        printf(msg, __VA_ARGS__); \
+        printf("%s", DEFAULT); \
+        printf("\n"); 
 
     #define coge_log_warning(msg, ...) \
-	printf("%s", YELLOW); \
-	printf("WARNING: "); \
-	printf(msg, __VA_ARGS__); \
-	printf("%s", DEFAULT); \
-	printf("\n"); 
+        printf("%s", YELLOW); \
+        printf("WARNING: "); \
+        printf(msg, __VA_ARGS__); \
+        printf("%s", DEFAULT); \
+        printf("\n"); 
 
     #define coge_log_fatal_error(msg, ...) \
-	printf("%s", BOLD); \
-	printf("%s", RED); \
-	printf("FATAL ERROR: "); \
-	printf(msg, __VA_ARGS__); \
-	printf("%s", DEFAULT); \
-	printf("\n"); 
+        printf("%s", BOLD); \
+        printf("%s", RED); \
+        printf("FATAL ERROR: "); \
+        printf(msg, __VA_ARGS__); \
+        printf("%s", DEFAULT); \
+        printf("\n"); 
 
     #define coge_log_important(msg, ...) \
-	printf("%s", UNDERLINE); \
-	printf("%s", BLUE); \
-	printf("IMPORTANT: "); \
-	printf(msg, __VA_ARGS__); \
-	printf("%s", DEFAULT); \
-	printf("\n"); 
+        printf("%s", UNDERLINE); \
+        printf("%s", BLUE); \
+        printf("IMPORTANT: "); \
+        printf(msg, __VA_ARGS__); \
+        printf("%s", DEFAULT); \
+        printf("\n"); 
 
 #endif

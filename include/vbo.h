@@ -5,10 +5,10 @@
 
     // Declarations
     typedef struct {
-	int m_size;
-	const void * m_data;
-	int m_usage;
-	unsigned int m_vbo;
+        int m_size;
+        const void * m_data;
+        int m_usage;
+        unsigned int m_vbo;
     } coge_vbo_t;
 
     void coge_gen_vbo_t   (coge_vbo_t * vbo);

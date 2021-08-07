@@ -19,8 +19,7 @@ unsigned int columns;
 float movementVec[4] = {
     0, 0, 0, 0};
 
-void Init()
-{
+void Init() {
     window = coge_window_init(640, 480, "Dev Testing");
     shaderID = coge_load_shader("res/Shaders/vertex_core_one.glsl", "res/Shaders/fragment_core_one.glsl");
 
@@ -49,8 +48,7 @@ void Init()
 
     int i;
 
-    for (i = 0; i < vertex_pointer_num; i++)
-    {
+    for (i = 0; i < vertex_pointer_num; i++) {
         glEnableVertexAttribArray(index[i]);
         glVertexAttribPointer(index[i], size[i], GL_FLOAT, GL_FALSE, stride, (void *)pointers[i]);
     }
@@ -70,13 +68,11 @@ void Init()
     coge_init_joystick(0);
     coge_update_joystick();
 
-    if (coge_is_joystick_present())
-    {
+    if (coge_is_joystick_present()) {
         coge_log_warning("No Joystick", NULL);
     }
 
-    else
-    {
+    else {
         coge_log_warning("No Joystick", NULL);
     }
 
@@ -87,44 +83,36 @@ void Init()
 void Update()
 {
 
-    if (coge_keyboard_key_down(GLFW_KEY_R))
-    {
+    if (coge_keyboard_key_down(GLFW_KEY_R)) {
         movementVec[0] = 0;
         movementVec[1] = 1;
         movementVec[2] = 2;
         movementVec[3] = 3;
     }
 
-    if (coge_keyboard_key_held_down(window, GLFW_KEY_W))
-    {
+    if (coge_keyboard_key_held_down(window, GLFW_KEY_W)) {
         movementVec[3] += 1;
     }
 
-    if (coge_keyboard_key_held_down(window, GLFW_KEY_S))
-    {
-        if (movementVec[3] >= 2)
-        {
+    if (coge_keyboard_key_held_down(window, GLFW_KEY_S)) {
+        if (movementVec[3] >= 2) {
             movementVec[3] -= 0.5;
         }
     }
 
-    if (coge_keyboard_key_held_down(window, GLFW_KEY_LEFT) || coge_keyboard_key_held_down(window, GLFW_KEY_A))
-    {
+    if (coge_keyboard_key_held_down(window, GLFW_KEY_LEFT) || coge_keyboard_key_held_down(window, GLFW_KEY_A)) {
         movementVec[0] -= 0.1;
     }
 
-    if (coge_keyboard_key_held_down(window, GLFW_KEY_RIGHT) || coge_keyboard_key_held_down(window, GLFW_KEY_D))
-    {
+    if (coge_keyboard_key_held_down(window, GLFW_KEY_RIGHT) || coge_keyboard_key_held_down(window, GLFW_KEY_D)) {
         movementVec[0] += 0.1;
     }
 
-    if (coge_keyboard_key_held_down(window, GLFW_KEY_UP))
-    {
+    if (coge_keyboard_key_held_down(window, GLFW_KEY_UP)) {
         movementVec[1] += 0.1;
     }
 
-    if (coge_keyboard_key_held_down(window, GLFW_KEY_DOWN))
-    {
+    if (coge_keyboard_key_held_down(window, GLFW_KEY_DOWN)) {
         movementVec[1] -= 0.1;
     }
 

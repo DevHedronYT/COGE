@@ -24,36 +24,30 @@ coge_program_props_t props;
 
 void Init();
 void Update();
-void RenderBegin(float r, float g, float b, float a)
-{
+void RenderBegin(float r, float g, float b, float a) {
     coge_clear_screen(r, g, b, a);
 }
 
 void Render();
 
-void RenderEnd()
-{
+void RenderEnd() {
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
 
-void Destroy()
-{
+void Destroy() {
     glUseProgram(0);
     glfwTerminate();
 }
 
-void ResetULoc()
-{
+void ResetULoc() {
     uLocation = -1;
 }
 
-void Run()
-{
+void Run() {
     Init();
 
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         Update();
         Render();
     }

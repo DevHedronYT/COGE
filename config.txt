@@ -6,7 +6,7 @@ outDir = _build
 src = ${sourceDir}
 obj = ${outDir}/obj
 
-frameworkRoot = include
+frameworkRoot = include/
 glfwRoot = ${externDir}/GLFW
 gladRoot = ${externDir}/GLAD
 single_file_root = ${externDir}/STB/

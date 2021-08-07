@@ -8,7 +8,7 @@ unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName) 
     FILE * fs = fopen(fsFileName, "r");
 
     if (vs == NULL || fs == NULL) {
-	coge_log_error("One of the shaders is not loaded", NULL);
+        coge_log_error("One of the shaders is not loaded", NULL);
     }
 
     fseek(vs, 0, SEEK_END);
@@ -29,11 +29,11 @@ unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName) 
 
     int i = 0;
     while (1) {
-	if ((vsCode[i] = fgetc(vs)) == EOF) {
-	    break;
-	}
+        if ((vsCode[i] = fgetc(vs)) == EOF) {
+            break;
+        }
 
-	i++;
+        i++;
 
     }
 
@@ -43,11 +43,11 @@ unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName) 
     i = 0;
     while (1) {
 
-	if ((fsCode[i] = fgetc(fs)) == EOF) {
-	    break;
-	}
+        if ((fsCode[i] = fgetc(fs)) == EOF) {
+            break;
+        }
 
-	i++;
+        i++;
 
     }
 
@@ -67,9 +67,9 @@ unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName) 
     glGetShaderiv(vsID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
     if (infoLogLength > 0) {
-	char errorMsg[infoLogLength + 1];
-	glGetShaderInfoLog(vsID, infoLogLength, NULL, &errorMsg[0]);
-	coge_log_error("%s", &errorMsg[0]);
+        char errorMsg[infoLogLength + 1];
+        glGetShaderInfoLog(vsID, infoLogLength, NULL, &errorMsg[0]);
+        coge_log_error("%s", &errorMsg[0]);
     }
 
     glShaderSource(fsID, 1, &fsSource, &flength);
@@ -79,9 +79,9 @@ unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName) 
     glGetShaderiv(fsID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
     if (infoLogLength > 0) {
-	char errorMsg[infoLogLength + 1];
-	glGetShaderInfoLog(fsID, infoLogLength, NULL, &errorMsg[0]);
-	coge_log_error("%s", &errorMsg[0]);
+        char errorMsg[infoLogLength + 1];
+        glGetShaderInfoLog(fsID, infoLogLength, NULL, &errorMsg[0]);
+        coge_log_error("%s", &errorMsg[0]);
     }
 
 
@@ -94,9 +94,9 @@ unsigned int coge_load_shader(const char * vsFileName, const char * fsFileName) 
     glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
     if (infoLogLength > 0){
-	char errorMsg[infoLogLength + 1];
-	glGetProgramInfoLog(programID, infoLogLength, NULL, &errorMsg[0]);
-	coge_log_error("%s", &errorMsg[0]);
+        char errorMsg[infoLogLength + 1];
+        glGetProgramInfoLog(programID, infoLogLength, NULL, &errorMsg[0]);
+        coge_log_error("%s", &errorMsg[0]);
     }
 
 

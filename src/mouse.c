@@ -30,8 +30,8 @@ void coge_init_mouse() {
     g_coge_is_first_mouse = 1;
     int i;
     for (i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++) {
-	g_coge_mouse_buttons[i] = 0;
-	g_coge_mouse_buttons_changed[i] = 0;
+        g_coge_mouse_buttons[i] = 0;
+        g_coge_mouse_buttons_changed[i] = 0;
     }
 }
 
@@ -40,10 +40,10 @@ void coge_mouse_cursor_pos_callback(GLFWwindow * window, double _x, double _y) {
     g_coge_mouse_pos_y = _y;
 
     if (g_coge_is_first_mouse) {
-	g_coge_mouse_last_pos_x = g_coge_mouse_pos_x;
-	g_coge_mouse_last_pos_x = g_coge_mouse_pos_y;
+        g_coge_mouse_last_pos_x = g_coge_mouse_pos_x;
+        g_coge_mouse_last_pos_x = g_coge_mouse_pos_y;
 
-	g_coge_is_first_mouse = 0;
+        g_coge_is_first_mouse = 0;
     }
 
     g_coge_mouse_dx = g_coge_mouse_pos_x - g_coge_mouse_last_pos_x;
@@ -55,13 +55,13 @@ void coge_mouse_cursor_pos_callback(GLFWwindow * window, double _x, double _y) {
 
 void coge_mouse_button_callback(GLFWwindow * window, int button, int action, int mods) {
     if (action != GLFW_RELEASE) {
-	if (!g_coge_mouse_buttons[button]) {
-	    g_coge_mouse_buttons[button] = 1;
-	}
+        if (!g_coge_mouse_buttons[button]) {
+            g_coge_mouse_buttons[button] = 1;
+        }
     }
 
     else {
-	g_coge_mouse_buttons[button] = 0;
+        g_coge_mouse_buttons[button] = 0;
     }
     
     g_coge_mouse_buttons_changed[button] = action != GLFW_REPEAT;

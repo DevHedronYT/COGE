@@ -28,7 +28,7 @@ coge_program_props_t coge_gen_program_props_t(float * vertices, unsigned int * i
 GLFWwindow * coge_window_init(int width, int height, const char * name) {
 
     if (!glfwInit()) {
-	coge_log_error("Error Initializing GLFW", NULL);
+        coge_log_error("Error Initializing GLFW", NULL);
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -36,21 +36,21 @@ GLFWwindow * coge_window_init(int width, int height, const char * name) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     # ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GL_TRUE);
+        glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GL_TRUE);
     # endif
 	
     GLFWwindow * window = glfwCreateWindow(width, height, name, NULL, NULL);
     if (!window) {
-	coge_log_error("Error Making Window", NULL);
-	glfwTerminate();
+        coge_log_error("Error Making Window", NULL);
+        glfwTerminate();
     }
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-	coge_log_error("Error Initializing GLAD", NULL);
-	glfwTerminate();
+        coge_log_error("Error Initializing GLAD", NULL);
+        glfwTerminate();
     }
     
     coge_log_info("OpenGL Version: %s", glGetString(GL_VERSION));

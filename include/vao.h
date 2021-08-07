@@ -5,7 +5,7 @@
 
     // Declaration
     typedef struct {
-	unsigned int m_vao;
+        unsigned int m_vao;
     } coge_vao_t;
 
     void coge_gen_vao_t   (coge_vao_t * vao);

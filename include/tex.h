@@ -5,13 +5,13 @@
     #include <gl.h>
 
     typedef struct {
-	unsigned int m_id;
-	const char * m_path;
-	unsigned int m_slot;
-	unsigned char * m_buffer;
-	int m_width;
-	int m_height; 
-	int m_bpp;
+        unsigned int m_id;
+        const char * m_path;
+        unsigned int m_slot;
+        unsigned char * m_buffer;
+        int m_width;
+        int m_height; 
+        int m_bpp;
     } coge_texture_t;
 
     void coge_gen_texture_t (coge_texture_t * tex); 

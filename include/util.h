@@ -12,9 +12,9 @@
 
     // Declarations
     typedef struct {
-	coge_vao_t vao;
-	coge_vbo_t vbo;
-	coge_ibo_t ibo;
+        coge_vao_t vao;
+        coge_vbo_t vbo;
+        coge_ibo_t ibo;
     } coge_program_props_t;
 
     coge_program_props_t coge_gen_program_props_t(float * vertices, unsigned int * indices, unsigned int verticesSize, unsigned int indicesSize, unsigned int vboUsage, unsigned int iboUsage); 

@@ -17,9 +17,9 @@ void coge_update_joystick() {
     g_coge_joystick_present = glfwJoystickPresent(g_coge_joystick_id);
 
     if (g_coge_joystick_present) {
-	g_coge_joystick_name = glfwGetJoystickName(g_coge_joystick_id);
-	g_coge_joystick_axes = glfwGetJoystickAxes(g_coge_joystick_id, &g_coge_joystick_axes_count);
-	g_coge_joystick_buttons = glfwGetJoystickButtons(g_coge_joystick_id, &g_coge_joystick_button_count);
+        g_coge_joystick_name = glfwGetJoystickName(g_coge_joystick_id);
+        g_coge_joystick_axes = glfwGetJoystickAxes(g_coge_joystick_id, &g_coge_joystick_axes_count);
+        g_coge_joystick_buttons = glfwGetJoystickButtons(g_coge_joystick_id, &g_coge_joystick_button_count);
     }
 }
 
@@ -30,7 +30,7 @@ void coge_init_joystick(int i) {
 
 float coge_joystick_axes_state(int axis) {
     if (g_coge_joystick_present) {
-	return g_coge_joystick_axes[axis];
+        return g_coge_joystick_axes[axis];
     }
 
     return -1;
@@ -39,7 +39,7 @@ float coge_joystick_axes_state(int axis) {
 
 unsigned char coge_joystick_button_state(int button) {
     if (g_coge_joystick_present) {
-	return g_coge_joystick_buttons[button];
+        return g_coge_joystick_buttons[button];
     }
 
     return GLFW_RELEASE;
