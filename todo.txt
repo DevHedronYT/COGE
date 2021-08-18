@@ -1,0 +1,12 @@
+#ifdef DEBUG
+#  define GL(line) do {                      \
+       line;                                 \
+       assert(glGetError() == GL_NO_ERROR);  \
+   } while(0)
+#else
+#  define GL(line) line
+#endif
+
+// Put GL around all your opengl calls:
+GL(glClear(GL_COLORS_MASK));
+GL(pos_loc = glGetAttribLocation(prog, "pos"));
