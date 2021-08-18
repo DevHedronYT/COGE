@@ -2,6 +2,20 @@
 
 #include "Test.h"
 
+#ifdef _WIN32
+    #include <Windows.h>
+#else
+    #include <unistd.h>
+#endif
+
+void delay(unsigned int ms) {
+    #ifdef _WIN32
+        Sleep(ms);
+    #else
+        usleep(ms * 1000);
+    #endif
+}
+
 coge_texture_t tex;
 float vertices[20] = {
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -17,7 +31,12 @@ unsigned int vertexNum;
 unsigned int columns;
 
 float movementVec[4] = {
-    0, 0, 0, 0};
+    0, 0, 0, 0
+};
+
+double frame_start;
+double frame_time;
+const int FRAME_DELAY = 1000 / 60; 
 
 void Init() {
     window = coge_window_init(640, 480, "Dev Testing");
@@ -80,8 +99,9 @@ void Init() {
     glUseProgram(0);
 }
 
-void Update()
-{
+void Update() {
+    
+    frame_start = glfwGetTime();
 
     if (coge_keyboard_key_down(GLFW_KEY_R)) {
         movementVec[0] = 0;
@@ -127,4 +147,9 @@ void Render()
     coge_draw_vertices(vertexNum);
 
     RenderEnd();
+    frame_time = glfwGetTime() - frame_start;
+    if (frame_time < FRAME_DELAY) {
+        delay(FRAME_DELAY - frame_time);
+    }
+
 }

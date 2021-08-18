@@ -46,7 +46,7 @@ GLFWwindow * coge_window_init(int width, int height, const char * name) {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
         coge_log_error("Error Initializing GLAD", NULL);
