@@ -1,5 +1,5 @@
 ## About
-- Small & simple OpenGL programming base/engine with fast as fxxk compilation, 
+Small & simple OpenGL programming base/engine with fast as fxxk compilation, 
 some of the code was took from my other projects like my 
 [c_std_lib](https://github.com/DevHedronYT/c_std_lib)
 
@@ -37,7 +37,7 @@ some of the code was took from my other projects like my
 - Web Compilation 
 
 ## Credits
-- Build system and files were written by [MousieDev](https://github.com/MousieDev), 
+Build system and files were written by [MousieDev](https://github.com/MousieDev), 
 I just reiterated on them a bit
 
 
