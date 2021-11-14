@@ -12,33 +12,33 @@ some of the code was took from my other projects like my
 
 ### Implemented
 
-#### - Simple API
-#### - Fast Compilation 
-#### - Shaders & Uniforms
-#### - Textures
-#### - Inputs
-#### - File I/O 
-#### - Maths (Like GLM)
-#### - Profiler
-#### - Strings
-#### - Colored Logging
-#### - 2D
+- Simple API
+- Fast Compilation 
+- Shaders & Uniforms
+- Textures
+- Inputs
+- File I/O 
+- Maths (Like GLM)
+- Profiler
+- Strings
+- Colored Logging
+- 2D
 
 ### Not Implemented
 
-#### - Unit Testing
-#### - Batch Rendering 
-#### - 3D
-#### - Textures
-#### - UI, like Nuklear
-#### - Physics
-#### - Documentation 
-#### - APIs
-#### - Web Compilation 
+- Unit Testing
+- Batch Rendering 
+- 3D
+- Textures
+- UI, like Nuklear
+- Physics
+- Documentation 
+- APIs
+- Web Compilation 
 
 ## Credits
-- Build system and files were written by [MousieDev](https://github.com/MousieDev), I just reiterated
-on them a bit
+- Build system and files were written by [MousieDev](https://github.com/MousieDev), 
+I just reiterated on them a bit
 
 
 
