@@ -1,0 +1,32 @@
+include tools/COMMON.ninja
+
+SYSLIBS = -lgdi32    $
+          -luser32   $
+          -lkernel32 $
+          -lopengl32 
+
+# GLFW Win32
+build ${OBJ_PATH}/win32_init.obj:     CC ${GLFW_SRC}/win32_init.c
+build ${OBJ_PATH}/win32_joystick.obj: CC ${GLFW_SRC}/win32_joystick.c
+build ${OBJ_PATH}/win32_monitor.obj:  CC ${GLFW_SRC}/win32_monitor.c
+build ${OBJ_PATH}/win32_time.obj:     CC ${GLFW_SRC}/win32_time.c
+build ${OBJ_PATH}/win32_thread.obj:   CC ${GLFW_SRC}/win32_thread.c
+build ${OBJ_PATH}/win32_window.obj:   CC ${GLFW_SRC}/win32_window.c
+build ${OBJ_PATH}/wgl_context.obj:    CC ${GLFW_SRC}/wgl_context.c
+build ${OBJ_PATH}/egl_context.obj:    CC ${GLFW_SRC}/egl_context.c
+
+build ${OUT_PATH}/${PLATFORM}.a: AR 
+                                 ${OBJ_PATH}/gl_init.obj        $
+                                 ${OBJ_PATH}/gl_input.obj       $
+                                 ${OBJ_PATH}/gl_vulkan.obj      $
+                                 ${OBJ_PATH}/gl_context.obj     $
+                                 ${OBJ_PATH}/gl_monitor.obj     $
+                                 ${OBJ_PATH}/gl_window.obj      $
+                                 ${OBJ_PATH}/win32_init.obj     $
+                                 ${OBJ_PATH}/win32_joystick.obj $
+                                 ${OBJ_PATH}/win32_monitor.obj  $
+                                 ${OBJ_PATH}/win32_time.obj     $
+                                 ${OBJ_PATH}/win32_thread.obj   $
+                                 ${OBJ_PATH}/win32_window.obj   $
+                                 ${OBJ_PATH}/wgl_context.obj    $
+                                 ${OBJ_PATH}/egl_context.obj

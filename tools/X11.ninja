@@ -1,0 +1,35 @@
+include tools/COMMON.ninja
+
+SYSLIBS = -L/usr/lib/x86_64-linux-gnu $
+          -lm -lpthread -ldl          $
+          -l:libGL.so.1 -lXi          $
+          -lX11 -lXrandr
+
+
+# GLFW Linux (X11)
+build ${OBJ_PATH}/x11_init.obj:       CC ${GLFW_SRC}/x11_init.c
+build ${OBJ_PATH}/x11_monitor.obj:    CC ${GLFW_SRC}/x11_monitor.c
+build ${OBJ_PATH}/x11_window.obj:     CC ${GLFW_SRC}/x11_window.c
+build ${OBJ_PATH}/xkb_unicode.obj:    CC ${GLFW_SRC}/xkb_unicode.c
+build ${OBJ_PATH}/posix_time.obj:     CC ${GLFW_SRC}/posix_time.c
+build ${OBJ_PATH}/posix_thread.obj:   CC ${GLFW_SRC}/posix_thread.c
+build ${OBJ_PATH}/glx_context.obj:    CC ${GLFW_SRC}/glx_context.c
+build ${OBJ_PATH}/egl_context.obj:    CC ${GLFW_SRC}/egl_context.c
+build ${OBJ_PATH}/linux_joystick.obj: CC ${GLFW_SRC}/linux_joystick.c
+
+build ${OUT_PATH}/${PLATFORM}.a: AR 
+                                 ${OBJ_PATH}/gl_init.obj        $
+                                 ${OBJ_PATH}/gl_input.obj       $
+                                 ${OBJ_PATH}/gl_vulkan.obj      $
+                                 ${OBJ_PATH}/gl_context.obj     $
+                                 ${OBJ_PATH}/gl_monitor.obj     $
+                                 ${OBJ_PATH}/gl_window.obj      $
+                                 ${OBJ_PATH}/x11_init.obj       $
+                                 ${OBJ_PATH}/x11_monitor.obj    $
+                                 ${OBJ_PATH}/x11_window.obj     $
+                                 ${OBJ_PATH}/xkb_unicode.obj    $
+                                 ${OBJ_PATH}/posix_time.obj     $
+                                 ${OBJ_PATH}/posix_thread.obj   $
+                                 ${OBJ_PATH}/linux_joystick.obj $
+                                 ${OBJ_PATH}/glx_context.obj    $
+                                 ${OBJ_PATH}/egl_context.obj

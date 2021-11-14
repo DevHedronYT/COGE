@@ -1,0 +1,33 @@
+include ./tools/flags.ninja
+###### Changeable:
+# Supported:
+#   GCC
+#   CLANG
+#   TCC [not sure but you can try]
+CC = clang
+
+# Choose either:
+# WIN32  -> Windows 
+# X11    -> Linux
+# COCOA -> MacOSX
+PLATFORM = COCOA
+
+# Same for all platforms
+# except if you are using
+# tcc in which it is 
+# tcc -ar rc
+LINKER = ar -rc
+
+# Choose a mode depending 
+# on the compiler you are
+# using, you can choose 
+# the following:
+#  DEBUG       
+#  GNU_RELEASE    
+#  TCC_RELEASE   
+#  CLANG_RELEASE 
+MODE = ${DEBUG}
+
+# Choose a file extension
+# for the output
+EXT = out

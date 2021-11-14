@@ -1,6 +1,0 @@
-I've trimmed down all the CMake stuff and other unnecessary repo stuff.
-I also removed opengl software rendering backend (OSMesa).
-
-*To everyone reading this, please, DON'T UPDATE THIS VERSION OF GLFW without us knowing, it *WILL* break the build system!!!*
-
-- MousieDev, 2020 - 2021

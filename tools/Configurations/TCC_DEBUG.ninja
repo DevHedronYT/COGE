@@ -1,4 +1,0 @@
-# Debug flags
-common = -Og -g3
-cflags = ${common} -std=c99 -Wpedantic -I${frameworkRoot} -I${single_file_root} -I${gladRoot} -I${glfwRoot}/include -D_GLFW_${platform}=1
-ldflags = ${common}

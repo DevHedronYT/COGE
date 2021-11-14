@@ -1,2 +1,0 @@
-cc = tcc
-ar = tcc -ar rc

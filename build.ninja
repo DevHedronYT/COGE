@@ -1,59 +1,67 @@
-include ./config.txt
-include ./tools/Configurations/${toolchain}.ninja
-include ./tools/Configurations/${toolchain}_${mode}.ninja
+include ./config.ninja
 
-rule cc
+CFLAGS = ${MODE} ${VERSION} ${INCLUDES} -D_GLFW_${PLATFORM}=1
+
+rule CC 
     depfile = ${out}.dep
-    command = ${cc} -MD -MF ${out}.dep -o ${out} -c ${in} ${cflags}
-    description = cc ${out}
+    command = ${CC} ${CFLAGS} -MD -MF ${out}.dep -o ${out} -c ${in} 
+    description = Compiling ${out}
 
-rule link
-    command = ${cc} -o ${out} ${in} ${libs} ${ldflags}
-    description = link ${out}
+rule LINK
+    command = ${CC} -o ${out} ${in} ${LIBS}   
+    description = Linking ${out}
 
-rule ar
-    command = ${ar} ${out} ${in}
-    description = ar ${out}
+rule AR
+    command = ${LINKER} ${out} ${in}
+    description = Linking As Well ${out}
 
 # Building
 ## Dependencies
 ### Platform dependent
-include ./tools/Platform/${platform}.ninja
+include ./tools/${PLATFORM}.ninja
 
-### Generic
-build ${obj}/glad.obj: cc ${externDir}/GLAD/gl.c
-build ${obj}/stb_image.obj: cc ${externDir}/STB/stb_image.c
-build ${outDir}/external.a: ar ${obj}/glad.obj ${obj}/stb_image.obj
-
-## Framework
-build ${obj}/ib.obj: cc ${sourceDir}/ibo.c
-build ${obj}/joy.obj: cc ${sourceDir}/joystick.c
-build ${obj}/keyb.obj: cc ${sourceDir}/keyboard.c
-build ${obj}/mous.obj: cc ${sourceDir}/mouse.c
-build ${obj}/rend.obj: cc ${sourceDir}/util.c
-build ${obj}/shad.obj: cc ${sourceDir}/shader.c
-build ${obj}/textur.obj: cc ${sourceDir}/tex.c
-build ${obj}/va.obj: cc ${sourceDir}/vao.c
-build ${obj}/vb.obj: cc ${sourceDir}/vbo.c
-build ${outDir}/framework.a: ar ${obj}/ib.obj ${obj}/joy.obj ${obj}/keyb.obj ${obj}/mous.obj ${obj}/rend.obj ${obj}/shad.obj ${obj}/textur.obj ${obj}/va.obj ${obj}/vb.obj
+### Third Party Assets 
+build ${OBJ_PATH}/glad.obj:   CC ${GLAD_SRC}/gl.c
+build ${OBJ_PATH}/stbi.obj:   CC ${STBI_SRC}/stb_image.c
+build ${OUT_PATH}/external.a: AR ${OBJ_PATH}/glad.obj $
+                                 ${OBJ_PATH}/stbi.obj 
 
 ## App
-build ${obj}/main.obj: cc ${testSrcDir}/main.c
 
-build ${outDir}/app.a: ar ${obj}/main.obj
-build ${outDir}/app${extension}: link ${outDir}/app.a ${outDir}/framework.a ${outDir}/${platform}.a ${outDir}/external.a
-  libs = ${dependentLibs}
+## Framework
+build ${OBJ_PATH}/file.obj:     CC ${COGE_SRC}/file.c
+build ${OBJ_PATH}/me.obj:       CC ${COGE_SRC}/me.c
+build ${OBJ_PATH}/prof.obj:     CC ${COGE_SRC}/prof.c
+build ${OBJ_PATH}/str.obj:      CC ${COGE_SRC}/str.c
+build ${OBJ_PATH}/print.obj:    CC ${COGE_SRC}/print.c
+build ${OBJ_PATH}/key.obj:      CC ${COGE_SRC}/key.c
+build ${OBJ_PATH}/ge.obj:       CC ${COGE_SRC}/ge.c
+build ${OBJ_PATH}/mouse.obj:    CC ${COGE_SRC}/mouse.c
+build ${OBJ_PATH}/graphics.obj: CC ${COGE_SRC}/graphics.c
+build ${OBJ_PATH}/joystick.obj: CC ${COGE_SRC}/joystick.c
+build ${OUT_PATH}/engine.a:     AR ${OBJ_PATH}/file.obj     $
+                                   ${OBJ_PATH}/me.obj       $
+                                   ${OBJ_PATH}/prof.obj     $
+                                   ${OBJ_PATH}/str.obj      $
+                                   ${OBJ_PATH}/key.obj      $
+                                   ${OBJ_PATH}/ge.obj       $
+                                   ${OBJ_PATH}/mouse.obj    $
+                                   ${OBJ_PATH}/joystick.obj $
+                                   ${OBJ_PATH}/graphics.obj $
+                                   ${OBJ_PATH}/print.obj
 
-## Test
-build ${obj}/test.obj: cc ${sourceDir}/Test.c
+## App
+build ${OBJ_PATH}/main.obj:   CC ${SRC}/main.c
+build ${OUT_PATH}/app.a:      AR ${OBJ_PATH}/main.obj
+build ${OUT_PATH}/app.${EXT}: LINK ${OUT_PATH}/app.a         $
+                                   ${OUT_PATH}/engine.a      $
+                                   ${OUT_PATH}/${PLATFORM}.a $
+                                   ${OUT_PATH}/external.a 
+ LIBS = ${SYSLIBS} 
 
-build ${outDir}/test.a: ar ${obj}/test.obj
-build ${outDir}/test${extension}: link ${outDir}/test.a ${outDir}/framework.a ${outDir}/${platform}.a ${outDir}/external.a
-  libs = ${dependentLibs}
 
 # End of build targets.
 
-build app: phony ${outDir}/app${extension}
-build test: phony ${outDir}/test${extension}
+build app: phony ${OUT_PATH}/app.${EXT}
 
 default app

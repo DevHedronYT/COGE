@@ -1,0 +1,47 @@
+VERSION = -std=c99
+DEBUG = -Og -g3
+GNU_RELEASE = -O2 -mtune=native -march=native      $
+              -fno-pie -fdata-sections             $
+              -ffunction-sections -static-libgcc   $
+              -static-libstdc++ -s -Wl,--as-needed $
+              -Wl,--gc-sections       
+
+TCC_RELEASE = -O3 -mtune=native -march=native      $
+              -fno-pie -fdata-sections             $
+              -ffunction-sections -static-libgcc   $
+              -s -Wl,--as-needed -Wl,--gc-sections 
+
+CLANG_RELEASE = -Wpedantic -O3 -mtune=native -pipe $
+                -fdata-sections -ffunction-sections 
+
+
+SRC = src
+INCLUDE = include
+OUT_PATH = _build
+OBJ_PATH = ${OUT_PATH}/obj
+EXTERNAL = external
+
+GLFW_PATH = ${EXTERNAL}/GLFW
+STBI_PATH = ${EXTERNAL}/STBI
+GLAD_PATH = ${EXTERNAL}/GLAD
+COGE_PATH = engine
+
+
+GLFW_INCLUDE = ${GLFW_PATH}/${INCLUDE}
+GLFW_SRC = ${GLFW_PATH}/${SRC}
+
+STBI_INCLUDE = ${STBI_PATH}/${INCLUDE}
+STBI_SRC = ${STBI_PATH}/${SRC}
+
+GLAD_INCLUDE = ${GLAD_PATH}/${INCLUDE}
+GLAD_SRC = ${GLAD_PATH}/${SRC}
+
+COGE_INCLUDE = ${COGE_PATH}/${INCLUDE}
+COGE_SRC = ${COGE_PATH}/${SRC}
+
+INCLUDES = -I ${GLFW_INCLUDE} $
+           -I ${STBI_INCLUDE} $
+           -I ${GLAD_INCLUDE} $
+           -I ${COGE_INCLUDE}
+
+

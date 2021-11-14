@@ -1,0 +1,7 @@
+# GLFW Generic
+build ${OBJ_PATH}/gl_init.obj:    CC ${GLFW_SRC}/init.c
+build ${OBJ_PATH}/gl_input.obj:   CC ${GLFW_SRC}/input.c
+build ${OBJ_PATH}/gl_vk.obj:      CC ${GLFW_SRC}/vulkan.c
+build ${OBJ_PATH}/gl_ctx.obj:     CC ${GLFW_SRC}/context.c
+build ${OBJ_PATH}/gl_monitor.obj: CC ${GLFW_SRC}/monitor.c
+build ${OBJ_PATH}/gl_win.obj:     CC ${GLFW_SRC}/window.c

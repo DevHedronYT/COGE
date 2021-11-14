@@ -1,0 +1,33 @@
+include tools/COMMON.ninja
+
+SYSLIBS = -framework Cocoa          $
+          -framework IOKit          $
+          -framework CoreFoundation $
+          -framework OpenGL         $
+          -framework CoreVideo
+
+# GLFW Cocoa 
+build ${OBJ_PATH}/cocoa_init.obj:     CC ${GLFW_SRC}/cocoa_init.m
+build ${OBJ_PATH}/cocoa_joystick.obj: CC ${GLFW_SRC}/cocoa_joystick.m
+build ${OBJ_PATH}/cocoa_monitor.obj:  CC ${GLFW_SRC}/cocoa_monitor.m
+build ${OBJ_PATH}/cocoa_window.obj:   CC ${GLFW_SRC}/cocoa_window.m
+build ${OBJ_PATH}/cocoa_time.obj:     CC ${GLFW_SRC}/cocoa_time.c
+build ${OBJ_PATH}/posix_thread.obj:   CC ${GLFW_SRC}/posix_thread.c
+build ${OBJ_PATH}/nsgl_context.obj:   CC ${GLFW_SRC}/nsgl_context.m
+build ${OBJ_PATH}/egl_context.obj:    CC ${GLFW_SRC}/egl_context.c
+
+build ${OUT_PATH}/${PLATFORM}.a: AR                             $
+                                 ${OBJ_PATH}/gl_init.obj        $
+                                 ${OBJ_PATH}/gl_input.obj       $
+                                 ${OBJ_PATH}/gl_vk.obj          $
+                                 ${OBJ_PATH}/gl_ctx.obj         $
+                                 ${OBJ_PATH}/gl_monitor.obj     $
+                                 ${OBJ_PATH}/gl_win.obj         $
+                                 ${OBJ_PATH}/cocoa_init.obj     $
+                                 ${OBJ_PATH}/cocoa_joystick.obj $
+                                 ${OBJ_PATH}/cocoa_monitor.obj  $
+                                 ${OBJ_PATH}/cocoa_window.obj   $
+                                 ${OBJ_PATH}/cocoa_time.obj     $
+                                 ${OBJ_PATH}/posix_thread.obj   $
+                                 ${OBJ_PATH}/nsgl_context.obj   $
+                                 ${OBJ_PATH}/egl_context.obj
