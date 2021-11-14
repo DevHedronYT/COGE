@@ -123,7 +123,7 @@ f32_t ge_angle_between_v2(ge_v2_t * v1, ge_v2_t * v2) {
     f32_t amt = dot / (v1mag * v2mag);
 
     if (amt <= -1) {
-        return M_PI;
+        return ge_pi;
     } else if (amt >= 1) {
         return 0;
     }
@@ -250,7 +250,7 @@ f32_t ge_angle_between_v3(ge_v3_t * v1, ge_v3_t * v2) {
     f32_t amt = dot / (v1mag * v2mag);
 
     if (amt <= -1) {
-        return M_PI;
+        return ge_pi;
     } else if (amt >= 1) {
         return 0;
     }
@@ -539,7 +539,7 @@ ge_m4x4_t ge_m4x4_mult_n(u32_t m4x4_count, ...) {
     va_list matrices;
     va_start(matrices, m4x4_count);
         ge_m4x4_t ident = ge_identity_m4x4();
-        for (uint32_t i = 0; i < m4x4_count; ++i) {
+        for (u32_t i = 0; i < m4x4_count; ++i) {
             ident = ge_m4x4_mult(ident, va_arg(matrices, ge_m4x4_t));
         }
 

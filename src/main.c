@@ -23,6 +23,72 @@ u08_t ge_check_keyboard_events(ge_keyboard_event_t * e) {
 
 ///////////////////////////
 ///////////////////////////
+// Batch Rendering Stuff 
+///////////////////////////
+///////////////////////////
+typedef struct {
+    ge_v3_t pos;
+    ge_v4_t col;
+    ge_v2_t tex_pos;
+    i32_t   tex_id;
+} vertex_t; 
+
+static vertex_t * create_quad(vertex_t * target, f32_t x, f32_t y, i32_t w, i32_t h, i32_t tex_id) {
+    target -> pos = ge_mk_v3(x, y, 0.0f);
+    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(0.0f, 0.0f);
+    target -> tex_id = tex_id - 1;
+    target++;
+
+    target -> pos = ge_mk_v3(x, y + h, 0.0f);
+    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(0.0f, 1.0f);
+    target -> tex_id = tex_id - 1;
+    target++;
+
+    target -> pos = ge_mk_v3(x + w, y, 0.0f);
+    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(1.0f, 0.0f);
+    target -> tex_id = tex_id - 1;
+    target++;
+
+    target -> pos = ge_mk_v3(x + w, y + w, 0.0f);
+    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(1.0f, 1.0f);
+    target -> tex_id = tex_id - 1;
+    target++;
+
+    return target;
+} 
+
+
+/*
+static Vertex* CreateTriangle(Vertex* target, float x, float y, float width, float height, float texID) {
+    target -> Position = { x, y, 0.0f };
+    target -> Color = { 0.5f, 0.4f, 1.0f, 0.5f };
+    target -> TexCoords = { 0.0f, 0.0f };
+    target -> TexID = texID - 1;
+    target++;
+
+    target -> Position = { x, y + height, 0.0f };
+    target -> Color = { 0.7f, 0.2f, 1.0f, 0.5f };
+    target -> TexCoords = { 0.0f, 1.0f };
+    target -> TexID = texID - 1;
+    target++;
+
+    target -> Position = { x + width, y + height, 0.0f };
+    target -> Color = { 0.5f, 0.9f, 1.0f, 0.5f };
+    target -> TexCoords = { 1.0f, 1.0f };
+    target -> TexID = texID - 1;
+    target++;
+
+    return target;
+
+}
+*/
+
+///////////////////////////
+///////////////////////////
 // Main 
 ///////////////////////////
 ///////////////////////////
@@ -87,17 +153,22 @@ i32_t main(emp_t) {
     //  Pos,   Tex Pos, Random 
     //  ge_v2, ge_v2,   f32_t       
 
+
+    i32_t size = 100;
+    ge_v2_t pos = ge_mk_v2(0 - size / 2, 0 - size / 2); 
+
     f32_t vertices[COMPONENTS_PER_VERT * VERTS] = {
-       -50,  50, 0.0f, 1.0f, 1.0f,
-       -50, -50, 0.0f, 0.0f, 1.0f,
-        50,  50, 1.0f, 1.0f, 1.0f,
-        50, -50, 1.0f, 0.0f, 1.0f
+        //       coordinates             texture    color  
+        pos.x,        pos.y,           0.0f, 0.0f,  1.0f, 
+        pos.x,        pos.y + size,    0.0f, 1.0f,  1.0f,
+        pos.x + size, pos.y,           1.0f, 0.0f,  1.0f,
+        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.0f
     };  
 
     u32_t indices[VERTS + 2 * SQUARES] = {
         0, 1, 2,
         2, 1, 3
-    };
+    }; 
 
     ///////////////////////////
     ///////////////////////////

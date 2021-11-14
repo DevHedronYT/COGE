@@ -15,13 +15,13 @@ build ${OBJ_PATH}/win32_window.obj:   CC ${GLFW_SRC}/win32_window.c
 build ${OBJ_PATH}/wgl_context.obj:    CC ${GLFW_SRC}/wgl_context.c
 build ${OBJ_PATH}/egl_context.obj:    CC ${GLFW_SRC}/egl_context.c
 
-build ${OUT_PATH}/${PLATFORM}.a: AR 
+build ${OUT_PATH}/${PLATFORM}.a: AR                             $
                                  ${OBJ_PATH}/gl_init.obj        $
                                  ${OBJ_PATH}/gl_input.obj       $
-                                 ${OBJ_PATH}/gl_vulkan.obj      $
-                                 ${OBJ_PATH}/gl_context.obj     $
+                                 ${OBJ_PATH}/gl_vk.obj          $
+                                 ${OBJ_PATH}/gl_ctx.obj         $
                                  ${OBJ_PATH}/gl_monitor.obj     $
-                                 ${OBJ_PATH}/gl_window.obj      $
+                                 ${OBJ_PATH}/gl_win.obj         $
                                  ${OBJ_PATH}/win32_init.obj     $
                                  ${OBJ_PATH}/win32_joystick.obj $
                                  ${OBJ_PATH}/win32_monitor.obj  $

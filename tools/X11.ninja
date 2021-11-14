@@ -17,13 +17,13 @@ build ${OBJ_PATH}/glx_context.obj:    CC ${GLFW_SRC}/glx_context.c
 build ${OBJ_PATH}/egl_context.obj:    CC ${GLFW_SRC}/egl_context.c
 build ${OBJ_PATH}/linux_joystick.obj: CC ${GLFW_SRC}/linux_joystick.c
 
-build ${OUT_PATH}/${PLATFORM}.a: AR 
+build ${OUT_PATH}/${PLATFORM}.a: AR                             $
                                  ${OBJ_PATH}/gl_init.obj        $
                                  ${OBJ_PATH}/gl_input.obj       $
-                                 ${OBJ_PATH}/gl_vulkan.obj      $
-                                 ${OBJ_PATH}/gl_context.obj     $
+                                 ${OBJ_PATH}/gl_vk.obj          $
+                                 ${OBJ_PATH}/gl_ctx.obj         $
                                  ${OBJ_PATH}/gl_monitor.obj     $
-                                 ${OBJ_PATH}/gl_window.obj      $
+                                 ${OBJ_PATH}/gl_win.obj         $
                                  ${OBJ_PATH}/x11_init.obj       $
                                  ${OBJ_PATH}/x11_monitor.obj    $
                                  ${OBJ_PATH}/x11_window.obj     $

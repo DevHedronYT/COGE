@@ -21,11 +21,7 @@
     #include <GLFW/glfw3.h>
     #define ge_win_t GLFWwindow*
 
-    #ifdef _MSC_VER
-        #define dbg_brk __debugbreak();
-    #else 
-        #define dbg_brk raise(SIGTRAP)
-    #endif
+    #define dbg_brk raise(SIGABRT)
 
     #define cls_err() ({ while (glGetError() != GL_NO_ERROR); })
     #define ge_assert(x) if (!(x)) dbg_brk;
