@@ -17,8 +17,8 @@ u08_t ge_check_keyboard_events(ge_keyboard_event_t * e) {
     return 0;
 } 
 
-#define COMPONENTS_PER_VERT 5
-#define SQUARES 1
+#define COMPONENTS_PER_VERT 6
+#define SQUARES 2
 #define VERTS SQUARES * 4
 
 ///////////////////////////
@@ -61,31 +61,51 @@ static vertex_t * create_quad(vertex_t * target, f32_t x, f32_t y, i32_t w, i32_
     return target;
 } 
 
-
-/*
-static Vertex* CreateTriangle(Vertex* target, float x, float y, float width, float height, float texID) {
-    target -> Position = { x, y, 0.0f };
-    target -> Color = { 0.5f, 0.4f, 1.0f, 0.5f };
-    target -> TexCoords = { 0.0f, 0.0f };
-    target -> TexID = texID - 1;
+static vertex_t * create_tri(vertex_t * target, f32_t x, f32_t y, f32_t w, f32_t h, f32_t tex_id) {
+    target -> pos = ge_mk_v3(x, y, 0.0f);
+    target -> col = ge_mk_v4(0.1f, 1.0f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(0.0f, 0.0f);
+    target -> tex_id = tex_id - 1;
     target++;
 
-    target -> Position = { x, y + height, 0.0f };
-    target -> Color = { 0.7f, 0.2f, 1.0f, 0.5f };
-    target -> TexCoords = { 0.0f, 1.0f };
-    target -> TexID = texID - 1;
+    target -> pos = ge_mk_v3(x, y + h, 0.0f);
+    target -> col = ge_mk_v4(0.1f, 1.0f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(0.0f, 1.0f);
+    target -> tex_id = tex_id - 1;
     target++;
 
-    target -> Position = { x + width, y + height, 0.0f };
-    target -> Color = { 0.5f, 0.9f, 1.0f, 0.5f };
-    target -> TexCoords = { 1.0f, 1.0f };
-    target -> TexID = texID - 1;
+    target -> pos = ge_mk_v3(x + w, y + h, 0.0f);
+    target -> col = ge_mk_v4(0.1f, 1.0f, 1.0f, 1.0f);
+    target -> tex_pos = ge_mk_v2(1.0f, 1.0f);
+    target -> tex_id = tex_id - 1;
     target++;
-
+    
     return target;
-
 }
-*/
+/*    f32_t vertices[COMPONENTS_PER_VERT * VERTS] = {
+        //       coordinates             texture    color  tex_id 
+        pos.x,        pos.y,           0.0f, 0.0f,  0.5f,   1.0f, 
+        pos.x,        pos.y + size,    0.0f, 1.0f,  1.5f,   1.0f,
+        pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,   1.0f,
+        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   1.0f,
+
+        pos_.x,        pos_.y,           0.0f, 0.0f,  1.2f,   0.0f, 
+        pos_.x,        pos_.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
+        pos_.x + size, pos_.y,           1.0f, 0.0f,  1.4f,   0.0f,
+        pos_.x + size, pos_.y + size,    1.0f, 1.0f,  1.5f,   0.0f
+ 
+    };   */
+
+f32_t * create_vertices_arr(ge_v2_t pos, i32_t size, i32_t id) {
+    f32_t vertices[COMPONENTS_PER_VERT * VERTS] =  {
+        //       coordinates             texture    color  tex_id 
+        pos.x,        pos.y,           0.0f, 0.0f,  0.5f,   id, 
+        pos.x,        pos.y + size,    0.0f, 1.0f,  1.5f,   id,
+        pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,  id,
+        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   id,
+    }; 
+    return vertices;
+}
 
 ///////////////////////////
 ///////////////////////////
@@ -130,12 +150,19 @@ i32_t main(emp_t) {
     // Textures 
     ///////////////////////////
     ///////////////////////////
-    ge_tex_t tex;
+    ge_tex_t tex = {0};
+    ge_tex_t tex_two = {0};
 
-    ge_mk_tex(&tex, "res/images/Hedron.png", 0);
+    ge_mk_tex(&tex, "res/images/PFP.png", 0);
+    ge_mk_tex(&tex_two, "res/images/Hedron.png", 1);
+
     ge_bind_tex(&tex); 
+    ge_bind_tex(&tex_two); 
 
-    ge_set_int(&shader, "uTexture", tex.slot);
+    i32_t samplers[2] = { 0, 1 };
+
+    call_gl(glUniform1iv(glGetUniformLocation(shader.id, "uTexture"), 2, samplers));
+
 
     ///////////////////////////
     ///////////////////////////
@@ -150,24 +177,43 @@ i32_t main(emp_t) {
     //  Bottom right 1.0f, 0.0f
    
     // Components:
-    //  Pos,   Tex Pos, Random 
-    //  ge_v2, ge_v2,   f32_t       
+    //  Pos,   Tex Pos, Random, Tex_id
+    //  ge_v2, ge_v2,   f32_t,  f32_t
 
 
     i32_t size = 100;
-    ge_v2_t pos = ge_mk_v2(0 - size / 2, 0 - size / 2); 
+    ge_v2_t pos = ge_mk_v2(w / 2 - size / 2, h / 2 - size / 2); 
+    ge_v2_t pos_ = ge_mk_v2(0 - size / 2, 0 - size / 2); 
 
     f32_t vertices[COMPONENTS_PER_VERT * VERTS] = {
-        //       coordinates             texture    color  
-        pos.x,        pos.y,           0.0f, 0.0f,  1.0f, 
-        pos.x,        pos.y + size,    0.0f, 1.0f,  1.0f,
-        pos.x + size, pos.y,           1.0f, 0.0f,  1.0f,
-        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.0f
-    };  
+        //       coordinates             texture    color  tex_id 
+        pos.x,        pos.y,           0.0f, 0.0f,  0.5f,   1.0f, 
+        pos.x,        pos.y + size,    0.0f, 1.0f,  1.5f,   1.0f,
+        pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,   1.0f,
+        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   1.0f,
+
+        pos_.x,        pos_.y,           0.0f, 0.0f,  1.2f,   0.0f, 
+        pos_.x,        pos_.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
+        pos_.x + size, pos_.y,           1.0f, 0.0f,  1.4f,   0.0f,
+        pos_.x + size, pos_.y + size,    1.0f, 1.0f,  1.5f,   0.0f
+
+    }; 
+/*
+
+    for (i32_t y = 0; y < 10; y++) {
+        for (i32_t x = 0; x < 10; x++) {
+            vertices[x + y]
+        }
+    }
+*/
 
     u32_t indices[VERTS + 2 * SQUARES] = {
         0, 1, 2,
-        2, 1, 3
+        2, 1, 3,
+
+        4, 5, 6,
+        6, 5, 7
+
     }; 
 
     ///////////////////////////
@@ -188,9 +234,11 @@ i32_t main(emp_t) {
 
     // The offset can be found by the index that element is found at
 
-    ge_vertex_buffer_layout(0, 2, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERT * sizeof(GL_FLOAT), 0);
-    ge_vertex_buffer_layout(1, 2, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERT * sizeof(GL_FLOAT), 2 * sizeof(GL_FLOAT));
-    ge_vertex_buffer_layout(2, 1, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERT * sizeof(GL_FLOAT), 4 * sizeof(GL_FLOAT));
+    u32_t fp_size = COMPONENTS_PER_VERT * sizeof(GL_FLOAT);
+    ge_vertex_buffer_layout(0, 2, GL_FLOAT, GL_FALSE, fp_size, 0);
+    ge_vertex_buffer_layout(1, 2, GL_FLOAT, GL_FALSE, fp_size, 2 * sizeof(GL_FLOAT));
+    ge_vertex_buffer_layout(2, 1, GL_FLOAT, GL_FALSE, fp_size, 4 * sizeof(GL_FLOAT));
+    ge_vertex_buffer_layout(3, 1, GL_FLOAT, GL_FALSE, fp_size, 5 * sizeof(GL_FLOAT));
 
 
     ///////////////////////////
@@ -210,7 +258,6 @@ i32_t main(emp_t) {
     ge_keyboard_event_t right = ge_mk_keyboard_event(GLFW_KEY_RIGHT, GLFW_KEY_D);
     ge_keyboard_event_t bottom = ge_mk_keyboard_event(GLFW_KEY_DOWN, GLFW_KEY_S); 
     ge_keyboard_event_t top = ge_mk_keyboard_event(GLFW_KEY_UP, GLFW_KEY_W);
-
 
     while (!glfwWindowShouldClose(win)) {
         ge_cls(0.5, 0.5, 1.0, 0.4);
@@ -242,6 +289,7 @@ i32_t main(emp_t) {
         if (ge_key(GLFW_KEY_S)) {
             ge_shader_hot_reload(&shader); 
             ge_set_mat4_uniform(&shader, "projection", &projection.elems[0][0]);
+            call_gl(glUniform1iv(glGetUniformLocation(shader.id, "uTexture"), 2, samplers));
         }
 
         /* if (view.elems[3][0] > w) {

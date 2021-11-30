@@ -234,16 +234,7 @@ emp_t ge_mk_tex(ge_tex_t * tex, str_t path, u16_t slot) {
 
     stbi_set_flip_vertically_on_load(0);
     
-    u32_t color;
-    u08_t cmp = ge_str_length(tex -> path) > 1;
-
-    if (cmp) {
-        tex -> buffer = stbi_load(tex -> path, &tex -> w, &tex -> h, &tex -> bpp, 4);
-    }
-
-    else {
-        color = 0xffffffff;
-    }
+    tex -> buffer = stbi_load(tex -> path, &tex -> w, &tex -> h, &tex -> bpp, 4);
 
     call_gl(glGenTextures(1, &tex -> id));
     call_gl(glBindTexture(GL_TEXTURE_2D, tex -> id));
@@ -254,17 +245,9 @@ emp_t ge_mk_tex(ge_tex_t * tex, str_t path, u16_t slot) {
     call_gl(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
 
-    if (cmp) {
-        call_gl(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex -> w, tex -> h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex -> buffer));
-    }
+    call_gl(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex -> w, tex -> h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex -> buffer));
 
-    else {
-        call_gl(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color));
-    }
-
-    glActiveTexture(tex -> slot);
-    call_gl(glBindTexture(GL_TEXTURE_2D, tex -> id));
-
+    call_gl(glBindTexture(GL_TEXTURE_2D, tex -> slot));
     if (tex -> buffer) {
         stbi_image_free(tex -> buffer);
     }
@@ -272,10 +255,9 @@ emp_t ge_mk_tex(ge_tex_t * tex, str_t path, u16_t slot) {
 } 
 
 emp_t ge_bind_tex(ge_tex_t * tex) { 
-    glActiveTexture(tex -> slot);
+    call_gl(glActiveTexture(GL_TEXTURE0 + tex -> slot));
     call_gl(glBindTexture(GL_TEXTURE_2D, tex -> id));
 }
-
 
 ///////////////////////////
 ///////////////////////////

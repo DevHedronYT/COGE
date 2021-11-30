@@ -105,8 +105,8 @@
 
 
     emp_t ge_mk_tex(ge_tex_t * tex, str_t path, u16_t slot); 
-    emp_t ge_bind_tex(ge_tex_t * tex);
-   
+    emp_t ge_bind_tex(ge_tex_t * tex); 
+
 
     ///////////////////////////
     ///////////////////////////

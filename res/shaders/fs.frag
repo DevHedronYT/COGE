@@ -5,10 +5,12 @@ out vec4 FragColor;
 
 in vec2 tex_coord;
 in float zz;
+in float texture_id;
 
-uniform sampler2D uTexture;
+uniform sampler2D uTexture[2];
 
 void main() {
-    FragColor = vec4(zz, 1.0f, 1.0f, 1.0f) * texture(uTexture, tex_coord);
+    int index = int(texture_id);
+    FragColor = vec4(10.0f, 1.0f, 1.0f, 1.0f) * texture(uTexture[index], tex_coord);
 }
 
