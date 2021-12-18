@@ -89,10 +89,10 @@ static vertex_t * create_tri(vertex_t * target, f32_t x, f32_t y, f32_t w, f32_t
         pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,   1.0f,
         pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   1.0f,
 
-        pos_.x,        pos_.y,           0.0f, 0.0f,  1.2f,   0.0f, 
-        pos_.x,        pos_.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
-        pos_.x + size, pos_.y,           1.0f, 0.0f,  1.4f,   0.0f,
-        pos_.x + size, pos_.y + size,    1.0f, 1.0f,  1.5f,   0.0f
+        pos_two.x,        pos_two.y,           0.0f, 0.0f,  1.2f,   0.0f, 
+        pos_two.x,        pos_two.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
+        pos_two.x + size, pos_two.y,           1.0f, 0.0f,  1.4f,   0.0f,
+        pos_two.x + size, pos_two.y + size,    1.0f, 1.0f,  1.5f,   0.0f
  
     };   */
 
@@ -169,6 +169,7 @@ i32_t main(emp_t) {
     // Vertices..etc..
     ///////////////////////////
     ///////////////////////////
+    ///////////////////////////
 
     // Ordering of vertices is:
     //  Top left     0.0f, 1.0f
@@ -183,7 +184,7 @@ i32_t main(emp_t) {
 
     i32_t size = 100;
     ge_v2_t pos = ge_mk_v2(w / 2 - size / 2, h / 2 - size / 2); 
-    ge_v2_t pos_ = ge_mk_v2(0 - size / 2, 0 - size / 2); 
+    ge_v2_t pos_two = ge_mk_v2(0 - size / 2, 0 - size / 2); 
 
     f32_t vertices[COMPONENTS_PER_VERT * VERTS] = {
         //       coordinates             texture    color  tex_id 
@@ -192,10 +193,10 @@ i32_t main(emp_t) {
         pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,   1.0f,
         pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   1.0f,
 
-        pos_.x,        pos_.y,           0.0f, 0.0f,  1.2f,   0.0f, 
-        pos_.x,        pos_.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
-        pos_.x + size, pos_.y,           1.0f, 0.0f,  1.4f,   0.0f,
-        pos_.x + size, pos_.y + size,    1.0f, 1.0f,  1.5f,   0.0f
+        pos_two.x,        pos_two.y,           0.0f, 0.0f,  1.2f,   0.0f, 
+        pos_two.x,        pos_two.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
+        pos_two.x + size, pos_two.y,           1.0f, 0.0f,  1.4f,   0.0f,
+        pos_two.x + size, pos_two.y + size,    1.0f, 1.0f,  1.5f,   0.0f
 
     }; 
 /*
@@ -253,7 +254,6 @@ i32_t main(emp_t) {
 
     f32_t rad = 0.0f;
 
-
     ge_keyboard_event_t left = ge_mk_keyboard_event(GLFW_KEY_LEFT, GLFW_KEY_A);
     ge_keyboard_event_t right = ge_mk_keyboard_event(GLFW_KEY_RIGHT, GLFW_KEY_D);
     ge_keyboard_event_t bottom = ge_mk_keyboard_event(GLFW_KEY_DOWN, GLFW_KEY_S); 
@@ -309,7 +309,7 @@ i32_t main(emp_t) {
         ge_draw_verts(VERTS + 2 * SQUARES);
         glfwSwapBuffers(win);
         glfwPollEvents();
-        ge_sleep(16);
+        // ge_sleep(16);
     }
 
     ///////////////////////////

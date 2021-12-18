@@ -4,13 +4,13 @@ include ./tools/flags.ninja
 #   GCC
 #   CLANG
 #   TCC [not sure but you can try]
-CC = clang
+CC = GCC
 
 # Choose either:
 # WIN32  -> Windows 
 # X11    -> Linux
 # COCOA -> MacOSX
-PLATFORM = COCOA
+PLATFORM = WIN32
 
 # Same for all platforms
 # except if you are using

@@ -20,10 +20,10 @@ file_t ge_load_file(str_t path) {
     if (f) {
         fseek(f, 0, SEEK_END);
         file_final.len = ftell(f);
-        file_final.content = (str_t) malloc(file_final.len * sizeof(str_t));
+        file_final.content = (str_t) calloc(file_final.len + 1, sizeof(chr_t));
         rewind(f);
         fread(file_final.content, sizeof(chr_t), file_final.len, f);
-        file_final.content[file_final.len] = '\0';
+        file_final.content[file_final.len + 1] = '\0';
         fclose(f);
 
         file_final.path = path;
