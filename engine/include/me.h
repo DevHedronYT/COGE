@@ -145,13 +145,10 @@
     ge_m4x4_t ge_m4x4_lookat(ge_v3_t pos, ge_v3_t target, ge_v3_t up);
 
     // Add:
-    //  m3x3_t 
-        //  lookat
-    //  quternions
-        //  
-    // objects
-    // rays
-
-
+    //  m3x3_t - |
+    //  m4x4_t - |
+    //           transpose, inverse, determinant
+    //  quaternions
+    
 
 #endif

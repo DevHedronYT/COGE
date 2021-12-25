@@ -1,7 +1,194 @@
+#include <ge.h>
 #include <GLAD/gl.h>
 #include <GLFW/glfw3.h>
-#include <ge.h>
+#include <stdlib.h>
 
+//////////////////////////
+//////////////////////////
+// Hash Tables 
+//////////////////////////
+//////////////////////////
+typedef struct {
+    const str_t id;
+    u64_t       hash;
+    ret_t       val;
+} ht_item_t;
+
+typedef struct {
+    ht_item_t ** data;
+    u32_t        len;
+    u32_t        capacity;
+} ht_t; 
+
+ht_t  create_ht(u32_t capacity);
+u64_t hash_id(const str_t id);
+emp_t increase_ht_capacity(ht_t * ht, u32_t capacity);
+emp_t __insert_to_ht(ht_t * ht, const str_t id, ret_t data);
+ret_t __get_from_ht(ht_t ht, const str_t id);
+u32_t rm_from_ht(ht_t * ht, const str_t id);
+emp_t rm_ht(ht_t * ht);
+
+#define insert_to_ht(ht, id, data) \
+    __insert_to_ht(ht, id, (ret_t) data)
+
+#define get_from_ht(ht, id, type) \
+    (type)__get_from_ht(ht, id)
+
+
+// Capacity MUST BE power of 2
+ht_t create_ht(u32_t capacity) {
+    ht_t table;
+    table.data = (ht_item_t**) calloc(capacity, sizeof(ht_item_t*)); 
+    table.len = 0;
+    table.capacity = capacity;
+    return table;
+}
+
+#define FNV_OFFSET 14695981039346656037
+#define FNV_PRIME 1099511628211
+u64_t hash_id(const str_t id) {
+    u64_t hash = FNV_OFFSET;
+    for (const char * p = id; *p; p++) {
+        hash ^= (u64_t)(unsigned char)(*p);
+        hash *= FNV_PRIME;
+    }
+    return hash;
+}
+
+// Capacity MUST BE power of 2
+emp_t increase_ht_capacity(ht_t * ht, u32_t capacity) {
+    ht_t new_ht;
+    new_ht.data = (ht_item_t**) calloc(capacity, sizeof(ht_item_t*));
+    new_ht.len = 0;
+    new_ht.capacity = capacity;
+    for (u64_t i = 0; i < ht -> capacity; i++) {
+        if (ht -> data[i] -> val != NULL) {
+            __insert_to_ht(&new_ht, ht -> data[i] -> id, ht -> data[i] -> val);
+        }
+    }
+
+    rm_ht(ht);
+    ht = &new_ht;
+}
+
+emp_t __insert_to_ht(ht_t * ht, const str_t id, ret_t data) {
+    ht_item_t * item = (ht_item_t *) calloc(1, sizeof(ht_item_t));
+    item -> hash = hash_id(id);
+    item -> id = id;
+    item -> val = data;
+    u64_t index = item -> hash & (u64_t)(ht -> capacity - 1);
+
+    ht_item_t * current = ht -> data[index];
+    while (current != NULL) {
+        index++;
+        current = ht -> data[index];
+    }
+
+    if (index > ht -> capacity) {
+        increase_ht_capacity(ht, ht -> capacity * 2);
+        ht -> data[index] = item;
+    }
+
+    if (ht -> data[index] == NULL) {
+        ht -> data[index] = item;
+    } 
+
+    ht -> len++;
+}
+
+ret_t __get_from_ht(ht_t ht, const str_t id) {
+    u64_t index = hash_id(id) & (u64_t)(ht.capacity - 1); 
+    ht_item_t * data = ht.data[index];
+        
+    if (data == NULL) {
+        return NULL;
+    }
+
+    if (data -> val == NULL) {
+        return NULL;
+    }
+
+    while (ge_str_compare(data -> id, id) != 1) {
+        index++; 
+        data = ht.data[index]; 
+    }
+
+    if (data -> val != NULL && ge_str_compare(data -> id, id)) {
+        return data -> val; 
+    }
+
+    return NULL;
+}
+
+u32_t rm_from_ht(ht_t * ht, const str_t id) {
+    u64_t index = hash_id(id) & (u64_t)(ht -> capacity - 1); 
+    ht_item_t * data = ht -> data[index];
+    
+    if (data -> val == NULL) {
+        return 0;
+    }
+
+    while (ge_str_compare(data -> id, id) != 1) {
+        index++; 
+        data = ht -> data[index]; 
+    }
+
+    if (data -> val != NULL && ge_str_compare(data -> id, id)) {
+        data = NULL;
+        ht -> data[index] = NULL;
+    }
+    return index;
+}
+
+emp_t rm_ht(ht_t * ht) {
+    for (u32_t i = 0; i < ht -> capacity; i++) {
+        free(ht -> data[i]);
+    }
+    free(ht -> data);
+}
+
+
+//////////////////////////
+//////////////////////////
+// Resource Manager 
+//////////////////////////
+//////////////////////////
+typedef struct {
+    ht_t shader;
+    ht_t textures;
+} res_manager;
+
+emp_t make_res_manager(res_manager * manager);
+ge_shader_t * get_shader(const str_t name, res_manager * manager);
+emp_t get_texture(const str_t name, res_manager * manager);
+
+
+emp_t make_res_manager(res_manager * manager) {
+    manager -> shader = create_ht(100);
+    manager -> textures = create_ht(100);
+}
+
+
+ge_shader_t * get_shader(const str_t name, res_manager * manager) {
+    ge_shader_t * shader = get_from_ht(manager -> shader, name, ret_t);
+    return shader; 
+}
+
+emp_t mk_shader(str_t vs, str_t fs, const str_t name, res_manager * res_manager) {
+    ge_shader_t * shader = calloc(1, sizeof(ge_shader_t));
+    ge_mk_shader(shader, vs, fs);
+    insert_to_ht(&res_manager -> shader, name, shader);
+}
+
+emp_t get_texture(const str_t name, res_manager * manager) {
+
+}
+
+//////////////////////////
+//////////////////////////
+// Keys 
+//////////////////////////
+//////////////////////////
 typedef struct {
     i32_t keys[GLFW_KEY_LAST];
 } ge_keyboard_event_t;
@@ -21,97 +208,25 @@ u08_t ge_check_keyboard_events(ge_keyboard_event_t * e) {
 #define SQUARES 2
 #define VERTS SQUARES * 4
 
-///////////////////////////
-///////////////////////////
-// Batch Rendering Stuff 
-///////////////////////////
-///////////////////////////
-typedef struct {
-    ge_v3_t pos;
-    ge_v4_t col;
-    ge_v2_t tex_pos;
-    i32_t   tex_id;
-} vertex_t; 
+//////////////////////////
+//////////////////////////
+// Games 
+//////////////////////////
+//////////////////////////
+typedef enum {
+    ACTIVE,
+    MENU,
+    WIN
+} game_state;
 
-static vertex_t * create_quad(vertex_t * target, f32_t x, f32_t y, i32_t w, i32_t h, i32_t tex_id) {
-    target -> pos = ge_mk_v3(x, y, 0.0f);
-    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(0.0f, 0.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
+#define WIDTH 640
+#define HEIGHT 480
 
-    target -> pos = ge_mk_v3(x, y + h, 0.0f);
-    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(0.0f, 1.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
+emp_t game_init();
+emp_t game_process_input(f32_t dt);
+emp_t game_update(f32_t dt);
+emp_t game_render();
 
-    target -> pos = ge_mk_v3(x + w, y, 0.0f);
-    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(1.0f, 0.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
-
-    target -> pos = ge_mk_v3(x + w, y + w, 0.0f);
-    target -> col = ge_mk_v4(0.5f, 0.5f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(1.0f, 1.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
-
-    return target;
-} 
-
-static vertex_t * create_tri(vertex_t * target, f32_t x, f32_t y, f32_t w, f32_t h, f32_t tex_id) {
-    target -> pos = ge_mk_v3(x, y, 0.0f);
-    target -> col = ge_mk_v4(0.1f, 1.0f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(0.0f, 0.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
-
-    target -> pos = ge_mk_v3(x, y + h, 0.0f);
-    target -> col = ge_mk_v4(0.1f, 1.0f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(0.0f, 1.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
-
-    target -> pos = ge_mk_v3(x + w, y + h, 0.0f);
-    target -> col = ge_mk_v4(0.1f, 1.0f, 1.0f, 1.0f);
-    target -> tex_pos = ge_mk_v2(1.0f, 1.0f);
-    target -> tex_id = tex_id - 1;
-    target++;
-    
-    return target;
-}
-/*    f32_t vertices[COMPONENTS_PER_VERT * VERTS] = {
-        //       coordinates             texture    color  tex_id 
-        pos.x,        pos.y,           0.0f, 0.0f,  0.5f,   1.0f, 
-        pos.x,        pos.y + size,    0.0f, 1.0f,  1.5f,   1.0f,
-        pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,   1.0f,
-        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   1.0f,
-
-        pos_two.x,        pos_two.y,           0.0f, 0.0f,  1.2f,   0.0f, 
-        pos_two.x,        pos_two.y + size,    0.0f, 1.0f,  1.3f,   0.0f,
-        pos_two.x + size, pos_two.y,           1.0f, 0.0f,  1.4f,   0.0f,
-        pos_two.x + size, pos_two.y + size,    1.0f, 1.0f,  1.5f,   0.0f
- 
-    };   */
-
-f32_t * create_vertices_arr(ge_v2_t pos, i32_t size, i32_t id) {
-    f32_t vertices[COMPONENTS_PER_VERT * VERTS] =  {
-        //       coordinates             texture    color  tex_id 
-        pos.x,        pos.y,           0.0f, 0.0f,  0.5f,   id, 
-        pos.x,        pos.y + size,    0.0f, 1.0f,  1.5f,   id,
-        pos.x + size, pos.y,           1.0f, 0.0f,  1.75f,  id,
-        pos.x + size, pos.y + size,    1.0f, 1.0f,  1.2f,   id,
-    }; 
-    return vertices;
-}
-
-///////////////////////////
-///////////////////////////
-// Main 
-///////////////////////////
-///////////////////////////
 i32_t main(emp_t) {
     
     ///////////////////////////
@@ -137,13 +252,23 @@ i32_t main(emp_t) {
     // Shaders
     ///////////////////////////
     ///////////////////////////
-    ge_shader_t shader;
-    ge_mk_shader(&shader, "res/shaders/vs.frag", "res/shaders/fs.frag");
-    ge_bind_shader(shader);
+    res_manager manager;
+    make_res_manager(&manager);
 
-    ge_set_mat4_uniform(&shader, "projection", &projection.elems[0][0]);
-    ge_set_mat4_uniform(&shader, "rotation", &rotation.elems[0][0]);
-    ge_set_mat4_uniform(&shader, "view", &view.elems[0][0]);
+    mk_shader("res/shaders/vs.frag", "res/shaders/fs.frag", "normal", &manager);
+    mk_shader("res/shaders/vs.frag", "res/shaders/fs.frag", "normal_two", &manager);
+
+    ge_shader_t * shader_one = get_shader("normal", &manager);  
+    ge_shader_t * shader_two = get_shader("normal_two", &manager);  
+
+    ge_shader_t * shader = shader_one;
+
+    ge_bind_shader(*shader);
+    ge_bind_shader(*shader);
+
+    ge_set_mat4_uniform(shader, "projection", &projection.elems[0][0]);
+    ge_set_mat4_uniform(shader, "rotation", &rotation.elems[0][0]);
+    ge_set_mat4_uniform(shader, "view", &view.elems[0][0]);
     
     ///////////////////////////
     ///////////////////////////
@@ -161,7 +286,7 @@ i32_t main(emp_t) {
 
     i32_t samplers[2] = { 0, 1 };
 
-    call_gl(glUniform1iv(glGetUniformLocation(shader.id, "uTexture"), 2, samplers));
+    call_gl(glUniform1iv(glGetUniformLocation(shader -> id, "uTexture"), 2, samplers));
 
 
     ///////////////////////////
@@ -186,6 +311,7 @@ i32_t main(emp_t) {
     ge_v2_t pos = ge_mk_v2(w / 2 - size / 2, h / 2 - size / 2); 
     ge_v2_t pos_two = ge_mk_v2(0 - size / 2, 0 - size / 2); 
 
+
     f32_t vertices[COMPONENTS_PER_VERT * VERTS] = {
         //       coordinates             texture    color  tex_id 
         pos.x,        pos.y,           0.0f, 0.0f,  0.5f,   1.0f, 
@@ -199,6 +325,8 @@ i32_t main(emp_t) {
         pos_two.x + size, pos_two.y + size,    1.0f, 1.0f,  1.5f,   0.0f
 
     }; 
+
+
 /*
 
     for (i32_t y = 0; y < 10; y++) {
@@ -286,10 +414,27 @@ i32_t main(emp_t) {
             rotation = ge_m4x4_rotate(rotation, rad, ge_mk_v3(0, 0, 1));
         }
 
+
+        if (ge_key(GLFW_KEY_N)) {
+            shader = shader_two;
+            ge_bind_shader(*shader);
+            ge_log_i("%s",shader -> fs.content);
+            ge_set_mat4_uniform(shader, "projection", &projection.elems[0][0]);
+            call_gl(glUniform1iv(glGetUniformLocation(shader -> id, "uTexture"), 2, samplers));
+        }
+
+        if (ge_key(GLFW_KEY_U)) {
+            shader = shader_one;
+            ge_bind_shader(*shader);
+            ge_log_i("%s",shader -> fs.content);
+            ge_set_mat4_uniform(shader, "projection", &projection.elems[0][0]);
+            call_gl(glUniform1iv(glGetUniformLocation(shader -> id, "uTexture"), 2, samplers));
+        }
+
         if (ge_key(GLFW_KEY_S)) {
-            ge_shader_hot_reload(&shader); 
-            ge_set_mat4_uniform(&shader, "projection", &projection.elems[0][0]);
-            call_gl(glUniform1iv(glGetUniformLocation(shader.id, "uTexture"), 2, samplers));
+            ge_shader_hot_reload(shader); 
+            ge_set_mat4_uniform(shader, "projection", &projection.elems[0][0]);
+            call_gl(glUniform1iv(glGetUniformLocation(shader -> id, "uTexture"), 2, samplers));
         }
 
         /* if (view.elems[3][0] > w) {
@@ -303,8 +448,8 @@ i32_t main(emp_t) {
         //if (view.elems)
 
         view = ge_translate_m4x4(view, vel);
-        ge_set_mat4_uniform(&shader, "rotation", &rotation.elems[0][0]);
-        ge_set_mat4_uniform(&shader, "view", &view.elems[0][0]);
+        ge_set_mat4_uniform(shader, "rotation", &rotation.elems[0][0]);
+        ge_set_mat4_uniform(shader, "view", &view.elems[0][0]);
         
         ge_draw_verts(VERTS + 2 * SQUARES);
         glfwSwapBuffers(win);
@@ -317,7 +462,7 @@ i32_t main(emp_t) {
     // Destruction 
     ///////////////////////////
     ///////////////////////////   
-    ge_rm_shader(&shader);
+    ge_rm_shader(shader);
     ge_rm_vao(&vao);
     ge_rm_ibo(&ibo);
     ge_rm_vbo(&vbo);
