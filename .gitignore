@@ -1,5 +1,5 @@
 _build/
 .ninja_log
 .ninja_deps
-vert_pos.txt
+./vert_pos.txt
 .DS_Store
