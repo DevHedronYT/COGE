@@ -10,7 +10,7 @@ CC = GCC
 # WIN32  -> Windows 
 # X11    -> Linux
 # COCOA -> MacOSX
-PLATFORM = WIN32
+PLATFORM = COCOA
 
 # Same for all platforms
 # except if you are using

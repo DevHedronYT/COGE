@@ -1,4 +1,4 @@
-#include <ge.h>
+#include <COGE/engine.h>
 #include <stdlib.h>
 
 
@@ -8,7 +8,7 @@
     #include <unistd.h>
 #endif
 
-emp_t ge_sleep(u32_t ms) {
+void ge_sleep(u32 ms) {
     #ifdef _WIN32
         Sleep(ms);
     #else
@@ -16,22 +16,17 @@ emp_t ge_sleep(u32_t ms) {
     #endif
 }
 
-i08_t ge_log_call(const str_t func,
-                  const str_t file, 
-                  i32_t line) {
+i08 ge_log_call(const char * func, const char * file, i32 line) {
     GLenum err;
     while ((err = glGetError())) {
-        ge_log_fe("[OpenGL Error]: %s %s, ERR CODE: %d, LINE NO: %d", func, file, err, line);
+        log_fatal_err("[OpenGL Error]: %s %s, ERR CODE: %d, LINE NO: %d", func, file, err, line);
         return 0;
     }
     return 1;
 }
 
 
-str_t error = NULL;
-
-emp_t ge_init() {
-    error = calloc(512, sizeof(chr_t));
+void ge_init() {
     glfwInit();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -45,48 +40,35 @@ emp_t ge_init() {
 }
 
 
-ge_win_t ge_mk_win(u32_t w, u32_t h, const str_t name, u08_t vsync) {
+ge_win_t ge_mk_win(u32 w, u32 h, const char * name, u08 vsync) {
     ge_win_t win = glfwCreateWindow(w, h, name, NULL, NULL);
-    if (!win) {
-        error = "Failed To Create Window";
-        glfwTerminate();
-        return NULL;
-    }
 
-    free(error);
-    error = NULL;
+    assert(win != NULL);
 
     glfwMakeContextCurrent(win);
     glfwSwapInterval(vsync);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        if (error == NULL) { error = calloc(512, sizeof(chr_t)); }
-        error = "Failed To Initialize GLAD";
+        log_msg("Failed to load GLAD");
         glfwTerminate();
         return NULL;
     }
 
-    free(error);
-    error = NULL;   
-    call_gl(glEnable(GL_BLEND));
-    call_gl(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    ge_call_gl(glEnable(GL_BLEND));
+    ge_call_gl(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     ge_init_keyboard(win);
     ge_init_mouse(win);
     ge_init_joystick(0);
+
     return win;
 }
 
-const str_t ge_get_renderer_version() {
-    return (str_t) glGetString(GL_VERSION);
+void ge_fill_win(f32 v0, f32 v1, f32 v2, f32 v3) {
+    ge_call_gl(glClear(GL_COLOR_BUFFER_BIT));
+    ge_call_gl(glClearColor(v0, v1, v2, v3));
 }
 
-str_t ge_get_err() {
-    return error;
+const char * ge_get_ogl_version() {
+    return (char *) glGetString(GL_VERSION);
 }
-
-emp_t ge_cls(f32_t v0, f32_t v1, f32_t v2, f32_t v3) {
-    call_gl(glClear(GL_COLOR_BUFFER_BIT));
-    call_gl(glClearColor(v0, v1, v2, v3));
-}
-

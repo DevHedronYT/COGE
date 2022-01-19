@@ -1,7 +1,7 @@
-#ifndef __GE_JOYSTICK__
+#ifndef GE_JOYSTICK_H
 
-    #define __GE_JOYSTICK__
-    #include <ge.h>
+    #define GE_JOYSTICK_H 
+    #include <extd_cstd/lib.h>
 
 
     #define GE_JOYSTICK_BTN_LEFT 0
@@ -23,16 +23,16 @@
     #define GE_JOYSTICK_DPAD_DOWN 16			
     #define GE_JOYSTICK_DPAD_LEFT 17		
 
-    emp_t ge_init_joystick(u16_t i);
-    u08_t ge_get_joystick_id(u16_t i);
-    emp_t ge_update_joystick();    
-    emp_t ge_init_joystick(u16_t i);
-    f32_t ge_get_joystick_axes_state(i32_t axis);
-    u08_t ge_joystick_btn_state(i32_t btn);
-    u32_t ge_get_joystick_axes_count();
-    u32_t ge_get_joystick_btn_count();
-    u08_t ge_is_joystick_present();
-    const str_t ge_get_joystick_name();
+    void ge_init_joystick(u16 i);
+    u08  ge_get_joystick_id(u16 i);
+    void ge_update_joystick();    
+    void ge_init_joystick(u16 i);
+    f32  ge_get_joystick_axes_state(i32 axis);
+    u08  ge_joystick_btn_state(i32 btn);
+    u32  ge_get_joystick_axes_count();
+    u32  ge_get_joystick_btn_count();
+    u08  ge_is_joystick_present();
+    const char * ge_get_joystick_name();
 
 
 #endif

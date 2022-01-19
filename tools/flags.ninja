@@ -24,6 +24,7 @@ EXTERNAL = external
 GLFW_PATH = ${EXTERNAL}/GLFW
 STBI_PATH = ${EXTERNAL}/STBI
 GLAD_PATH = ${EXTERNAL}/GLAD
+ESTD_PATH  = ${EXTERNAL}/extd_cstd
 COGE_PATH = engine
 
 
@@ -39,9 +40,13 @@ GLAD_SRC = ${GLAD_PATH}/${SRC}
 COGE_INCLUDE = ${COGE_PATH}/${INCLUDE}
 COGE_SRC = ${COGE_PATH}/${SRC}
 
+ESTD_INCLUDE = ${ESTD_PATH}/${INCLUDE}
+ESTD_SRC = ${ESTD_PATH}/${SRC}
+
 INCLUDES = -I ${GLFW_INCLUDE} $
            -I ${STBI_INCLUDE} $
            -I ${GLAD_INCLUDE} $
-           -I ${COGE_INCLUDE}
+           -I ${ESTD_INCLUDE} $
+           -I ${COGE_INCLUDE} 
 
 

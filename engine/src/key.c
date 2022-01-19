@@ -1,9 +1,9 @@
-#include <key.h>
+#include <COGE/engine.h>
 
-u08_t keys[GLFW_KEY_LAST + 1] = {0};
-u08_t keys_changed[GLFW_KEY_LAST + 1] = {0};
+u08 keys[GLFW_KEY_LAST + 1] = {0};
+u08 keys_changed[GLFW_KEY_LAST + 1] = {0};
 
-emp_t ge_key_callback(ge_win_t window, i32_t key, i32_t scancode, i32_t action, i32_t mods) {
+void ge_key_callback(ge_win_t window, i32 key, i32 scancode, i32 action, i32 mods) {
     if (action != GLFW_RELEASE) {
         if (!keys[key]) {
             keys[key] = 1;
@@ -17,25 +17,25 @@ emp_t ge_key_callback(ge_win_t window, i32_t key, i32_t scancode, i32_t action, 
     keys_changed[key] = action != GLFW_REPEAT; 
 }
 
-u08_t ge_key(i32_t key) {
+u08 ge_key(i32 key) {
     return keys[key];
 }
 
-u08_t ge_key_changed(i32_t key) {
-    i32_t ret = keys_changed[key];
+u08 ge_key_changed(i32 key) {
+    i32 ret = keys_changed[key];
     keys_changed[key] = 0;
     return ret;
 }
 
-u08_t ge_key_down(i32_t key) {
+u08 ge_key_down(i32 key) {
     return keys[key] && ge_key_changed(key);
 }
 
-u08_t ge_key_up(i32_t key) {
+u08 ge_key_up(i32 key) {
     return !keys[key] && ge_key_changed(key);
 }
 
-u08_t ge_key_held_down(ge_win_t win, i32_t key) {
+u08 ge_key_held_down(ge_win_t win, i32 key) {
     if (glfwGetKey(win, key)) {
         return 1;
     }
@@ -43,7 +43,7 @@ u08_t ge_key_held_down(ge_win_t win, i32_t key) {
     return 0;
 }
 
-u08_t ge_key_held_up(ge_win_t win, i32_t key) {
+u08 ge_key_held_up(ge_win_t win, i32 key) {
     if (!glfwGetKey(win, key)) {
         return 1;
     }
@@ -51,8 +51,18 @@ u08_t ge_key_held_up(ge_win_t win, i32_t key) {
     return 0;
 }
 
-emp_t ge_init_keyboard(ge_win_t win) {
+void ge_init_keyboard(ge_win_t win) {
     glfwSetKeyCallback(win, ge_key_callback);
 }
+
+u08 ge_check_keyboard_events(ge_keyboard_event_t * e) {
+    for (u32 i = 0; i < GLFW_KEY_LAST; i++) {
+        if (ge_key(e -> keys[i])) {
+            return 1;
+        }
+    }
+    return 0;
+} 
+
 
 
