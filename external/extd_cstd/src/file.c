@@ -11,7 +11,7 @@ i08 file_exists(const char * path) {
 // Maximum readable size is 2 GB
 file_info_t txt_file_query(const char * path) {
     assert(path != NULL);
-    FILE * f = fopen(path, "r");
+    FILE * f = fopen(path, "rb");
     assert(f != NULL);
 
     file_info_t file;
