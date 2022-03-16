@@ -1,3 +1,4 @@
+   
 #include "./game.h"
 
 ge_win_t win;
@@ -14,7 +15,6 @@ ge_res_manager_t resource_manager;
 
 ge_shader_t * current_shader;
 
-
 #define SIZE 100
 
 const f32 pos_x = WIDTH / 2 - SIZE / 2;
@@ -22,23 +22,28 @@ const f32 pos_y = HEIGHT / 2 - SIZE / 2;
 const f32 pos_two_x = 0 - SIZE / 2;
 const f32 pos_two_y = 0 - SIZE / 2;
 
-// Ordering of vertices is:
-//  Top left     0.0f, 1.0f
-//  Bottom left  0.0f, 0.0f,
-//  Top right    1.0f, 1.0f,
-//  Bottom right 1.0f, 0.0f
+f32 vertices[COMPONENTS_PER_VERT * VERTS] = {
+    //       coordinates             texture    color  tex_id 
+    pos_x,        pos_y,           0.0f, 0.0f,  0.5f,   1.0f, 
+    pos_x,        pos_y + SIZE,    0.0f, 1.0f,  1.5f,   1.0f,
+    pos_x + SIZE, pos_y,           1.0f, 0.0f,  1.75f,   1.0f,
+    pos_x + SIZE, pos_y + SIZE,    1.0f, 1.0f,  1.2f,   1.0f,
 
-// Components:
-//  Pos,   Tex Pos, Random, Tex_id
-//  ge_v2, ge_v2,   f32,  f32
-typedef struct {
-    f32 * vertices;
-    u32 * indices;
-    u64 v_size;
-    u64 i_size;
-} vertices_t;
+    pos_two_x,        pos_two_y,           0.0f, 0.0f,  1.2f,   0.0f, 
+    pos_two_x,        pos_two_y + SIZE,    0.0f, 1.0f,  1.3f,   0.0f,
+    pos_two_x + SIZE, pos_two_y,           1.0f, 0.0f,  1.4f,   0.0f,
+    pos_two_x + SIZE, pos_two_y + SIZE,    1.0f, 1.0f,  1.5f,   0.0f
 
-vertices_t vertices;
+}; 
+
+u32 indices[VERTS + 2 * SQUARES] = {
+    0, 1, 2,
+    2, 1, 3,
+
+    4, 5, 6,
+    6, 5, 7
+
+}; 
 
 ge_vao_t vao;
 ge_ibo_t ibo;
@@ -69,8 +74,8 @@ i32 game_init() {
     ge_mk_res_manager(&resource_manager);
 
     char new_str[9] = {0};
+    char * num = i32_to_str(0);
     for (u08 i = 0; i < 2; i++) {
-        char * num = i32_to_str(i);
         strcat(new_str, "shader_");
         strcat(new_str, num);
         new_str[8] = '\0';
@@ -92,45 +97,14 @@ i32 game_init() {
         ge_bind_tex(resource_manager.textures.data[textures[i]] -> val);
     }
 
-
-    f32 verts[COMPONENTS_PER_VERT * VERTS] = {
-        //       coordinates             texture    color  tex_id 
-        pos_x,        pos_y,           0.0f, 0.0f,  0.5f,   1.0f, 
-        pos_x,        pos_y + SIZE,    0.0f, 1.0f,  1.5f,   1.0f,
-        pos_x + SIZE, pos_y,           1.0f, 0.0f,  1.75f,   1.0f,
-        pos_x + SIZE, pos_y + SIZE,    1.0f, 1.0f,  1.2f,   1.0f,
-
-        pos_two_x,        pos_two_y,           0.0f, 0.0f,  1.2f,   0.0f, 
-        pos_two_x,        pos_two_y + SIZE,    0.0f, 1.0f,  1.3f,   0.0f,
-        pos_two_x + SIZE, pos_two_y,           1.0f, 0.0f,  1.4f,   0.0f,
-        pos_two_x + SIZE, pos_two_y + SIZE,    1.0f, 1.0f,  1.5f,   0.0f
-
-    }; 
-
-    vertices.vertices = verts;
-    vertices.v_size = COMPONENTS_PER_VERT * VERTS;
-
-
-    u32 indices[VERTS + 2 * SQUARES] = {
-        0, 1, 2,
-        2, 1, 3,
-
-        4, 5, 6,
-        6, 5, 7
-    }; 
-
-    vertices.indices = indices;
-    vertices.i_size = VERTS + 2 * SQUARES;
-
-
     ge_call_gl(glUniform1iv(glGetUniformLocation(current_shader -> id, "uTexture"), 2, samplers));
 
     ge_mk_vao(&vao);
     
-    ge_mk_ibo(&ibo, vertices.indices, GL_STATIC_DRAW, sizeof(u32) * (VERTS + 2 * SQUARES));
+    ge_mk_ibo(&ibo, indices, GL_STATIC_DRAW, sizeof(indices));
     ge_bind_ibo(ibo);
 
-    ge_mk_vbo(&vbo, vertices.vertices, sizeof(f32) * vertices.v_size, GL_STATIC_DRAW);
+    ge_mk_vbo(&vbo, vertices, sizeof(vertices), GL_STATIC_DRAW);
     ge_bind_vbo(vbo);
 
     // The offset can be found by the index that element is found at
@@ -147,7 +121,6 @@ i32 game_init() {
     log_msg("Game Initialized, Using OpenGL Version: %s", ge_get_ogl_version());
     return 1;
 }
-
 
 void game_process_input(f32 dt) {
     if (ge_check_keyboard_events(&right)) {
